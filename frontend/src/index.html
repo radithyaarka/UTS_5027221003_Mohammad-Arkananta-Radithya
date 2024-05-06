@@ -37,17 +37,32 @@
                 <input type="text" id="name" name="name"
                     class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1"><br>
                 <label for="event" class="block">Event:</label>
-                <input type="text" id="event" name="event"
-                    class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1"><br>
+                <select id="venue" name="venue"
+                    class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1">
+                    <option value="Day6">Day6 World Tour</option>
+                    <option value="5 Seconds of Summer">5 Seconds of Summer</option>
+                    <option value="One Direction">One Direction Reunion</option>
+                </select><br>
                 <label for="venue" class="block">Venue:</label>
-                <input type="text" id="venue" name="venue"
-                    class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1"><br>
+                <select id="venue" name="venue"
+                    class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1">
+                    <option value="Kos Imam">Kos Imam</option>
+                    <option value="Gor ITS">Gor ITS</option>
+                    <option value="Gelora Bung Karno">Gelora Bung Karno</option>
+                    <option value="Hardrock Stadium">Hardrock Stadium</option>
+                </select><br>
                 <label for="date" class="block">Date:</label>
                 <input type="date" id="date" name="date"
                     class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1"><br>
                 <label for="price" class="block">Price:</label>
-                <input type="number" id="price" name="price"
-                    class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1"><br>
+                <select id="price" name="price"
+                    class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1">
+                    <option value="500">VVIP: $500</option>
+                    <option value="300">VIP: $300</option>
+                    <option value="200">Regular: $200</option>
+                    <option value="100">Standing: $100</option>
+                    <!-- Add more options as needed -->
+                </select><br>
                 <button type="button" onclick="addTicket()"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Add
                     Ticket</button>
@@ -110,7 +125,8 @@
                 <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
             </div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div
+                class="inline-block align-bottom bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                 <div class="bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <h2 class="text-xl font-semibold mb-4 text-white">Update Ticket</h2>
                     <form id="updateModalForm">
@@ -147,7 +163,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <!-- JavaScript Code -->
     <script>
