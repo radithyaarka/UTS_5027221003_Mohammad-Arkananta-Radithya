@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+// python -m grpc_tools.protoc --proto_path=protobuf --python_out=backend --grpc_python_out=backend protobuf/tickets.proto
+
+message Ticket {
+  string id = 1;
+  string name = 2;
+  string event = 3;
+  string venue = 4;
+  string date = 5;
+  int64 price = 6;
+  // Tambahkan bidang lain yang relevan untuk pemesanan tiket
+}
+
+message TicketList {
+  repeated Ticket tickets = 1;
+}
+
+message TicketId {
+  string id = 1;
+}
+
+message Empty {}
+
+// Service
+service TicketService {
+  // Create
+  rpc AddTicket (Ticket) returns (Ticket) {}
+  // Read 
+  rpc GetAllTickets (Empty) returns (TicketList) {}
+  rpc GetTicket (TicketId) returns (Ticket) {}
+  // Update
+  rpc UpdateTicket (Ticket) returns (Ticket) {}
+  // Delete
+  rpc DeleteTicket (TicketId) returns (Empty) {}
+}

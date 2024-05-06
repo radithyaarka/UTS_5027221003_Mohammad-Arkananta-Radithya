@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Ticket Management</title>
+</head>
+
+<body class="bg-gray-900 text-white">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Ticket</h1>
+
+        <!-- Search Bar -->
+        <div class="flex justify-center items-center">
+            <input id="ticketId"
+                class="border border-gray-700 bg-gray-800 text-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none w-1/3"
+                type="text" name="search" placeholder="Search by ID">
+            <button type="button" onclick="getTicketById()"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2">Search</button>
+        </div>
+
+        <!-- Display Search Result -->
+        <div id="searchResult" class="mt-4 bg-gray-800 rounded-lg shadow-md p-4 max-w-md mx-auto">
+            <!-- Search result text will appear here -->
+        </div>
+
+        <!-- Add Ticket Form -->
+        <div class="mt-8 bg-gray-800 rounded-lg p-8 max-w-md mx-auto">
+            <h2 class="mt-8 text-xl font-semibold">Add Ticket</h2>
+            <form id="addTicketForm" class="mt-4">
+                <label for="id" class="block">ID:</label>
+                <input type="text" id="id" name="id"
+                    class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1"><br>
+                <label for="name" class="block">Name:</label>
+                <input type="text" id="name" name="name"
+                    class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1"><br>
+                <label for="event" class="block">Event:</label>
+                <input type="text" id="event" name="event"
+                    class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1"><br>
+                <label for="venue" class="block">Venue:</label>
+                <input type="text" id="venue" name="venue"
+                    class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1"><br>
+                <label for="date" class="block">Date:</label>
+                <input type="date" id="date" name="date"
+                    class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1"><br>
+                <label for="price" class="block">Price:</label>
+                <input type="number" id="price" name="price"
+                    class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1"><br>
+                <button type="button" onclick="addTicket()"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Add
+                    Ticket</button>
+            </form>
+        </div>
+
+        <!-- Toggle All Tickets Button -->
+        <div class="mt-8 mx-auto max-w-md">
+            <h2 class="text-xl font-semibold mb-4">All Tickets</h2>
+            <!-- Button to toggle visibility of ticket output -->
+            <button id="toggleTicketsBtn" onclick="toggleTickets()"
+                class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded mb-4">
+                See All Tickets
+            </button>
+            <!-- Ticket output will be appended here -->
+            <div id="ticketOutput" class="divide-y divide-gray-700 hidden"></div>
+        </div>
+    </div>
+
+    <div class="mt-8 ml-80 mr-80 mb-8 mx-auto">
+        <div class="bg-gray-800 rounded-lg p-8">
+            <h2 class="text-xl font-semibold">Edit & Delete Ticket</h2>
+
+            <div class="flex justify-between mt-4">
+                <!-- Edit Ticket Form -->
+                <div id="updateTicketFormContainer" class="w-1/2 pr-4">
+                    <h2 class="mt-8 text-xl font-semibold">Update Ticket</h2>
+                    <form id="updateTicketForm" class="mt-4">
+                        <label for="updateId" class="block">ID:</label>
+                        <input type="text" id="updateId" name="updateId"
+                            class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1">
+                        <br>
+                        <button type="button" onclick="openUpdateModal()"
+                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">Update
+                            Ticket</button>
+                    </form>
+                </div>
+
+                <!-- Delete Ticket Form -->
+                <div class="w-1/2 pl-4">
+                    <h2 class="mt-8 text-xl font-semibold">Delete Ticket</h2>
+                    <form id="deleteTicketForm" class="mt-4">
+                        <label for="deleteId" class="block">ID:</label>
+                        <input type="text" id="deleteId" name="deleteId"
+                            class="border border-gray-700 bg-gray-800 text-white h-10 px-3 rounded-lg text-sm w-full mt-1">
+                        <br>
+                        <button type="button" onclick="deleteTicket()"
+                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">Delete
+                            Ticket</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Updating Ticket Details -->
+    <div id="updateModal" class="hidden fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <h2 class="text-xl font-semibold mb-4 text-white">Update Ticket</h2>
+                    <form id="updateModalForm">
+                        <!-- Updated Ticket Details -->
+                        <label for="updateNameModal" class="block text-white">Name:</label>
+                        <input type="text" id="updateNameModal" name="updateNameModal"
+                            class="border border-gray-700 bg-gray-700 text-white h-10 px-3 rounded-lg text-sm w-full mt-1 mb-2">
+                        <br>
+                        <label for="updateEventModal" class="block text-white">Event:</label>
+                        <input type="text" id="updateEventModal" name="updateEventModal"
+                            class="border border-gray-700 bg-gray-700 text-white h-10 px-3 rounded-lg text-sm w-full mt-1 mb-2">
+                        <br>
+                        <label for="updateVenueModal" class="block text-white">Venue:</label>
+                        <input type="text" id="updateVenueModal" name="updateVenueModal"
+                            class="border border-gray-700 bg-gray-700 text-white h-10 px-3 rounded-lg text-sm w-full mt-1 mb-2">
+                        <br>
+                        <label for="updateDateModal" class="block text-white">Date:</label>
+                        <input type="date" id="updateDateModal" name="updateDateModal"
+                            class="border border-gray-700 bg-gray-700 text-white h-10 px-3 rounded-lg text-sm w-full mt-1 mb-2">
+                        <br>
+                        <label for="updatePriceModal" class="block text-white">Price:</label>
+                        <input type="number" id="updatePriceModal" name="updatePriceModal"
+                            class="border border-gray-700 bg-gray-700 text-white h-10 px-3 rounded-lg text-sm w-full mt-1 mb-2">
+                        <br>
+                        <div class="mt-4">
+                            <button type="button" onclick="updateTicketModal()"
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Update
+                                Ticket</button>
+                            <button type="button" onclick="closeUpdateModal()"
+                                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-2">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- JavaScript Code -->
+    <script>
+        function openUpdateModal() {
+            var id = document.getElementById("updateId").value;
+            // Fetch existing ticket details based on ID and populate the modal fields
+            fetch(`/ticket/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ticket not found');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data); // Log response from server
+                    // Populate modal fields with existing ticket data
+                    document.getElementById("updateNameModal").value = data.name;
+                    document.getElementById("updateEventModal").value = data.event;
+                    document.getElementById("updateVenueModal").value = data.venue;
+                    document.getElementById("updateDateModal").value = data.date;
+                    document.getElementById("updatePriceModal").value = data.price;
+
+                    // Show the modal
+                    document.getElementById("updateModal").classList.remove("hidden");
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ticket not found');
+                });
+        }
+
+        function closeUpdateModal() {
+            // Clear modal fields and hide the modal
+            document.getElementById("updateModalForm").reset();
+            document.getElementById("updateModal").classList.add("hidden");
+        }
+
+        function updateTicketModal() {
+            var id = document.getElementById("updateId").value;
+            var name = document.getElementById("updateNameModal").value;
+            var event = document.getElementById("updateEventModal").value;
+            var venue = document.getElementById("updateVenueModal").value;
+            var date = document.getElementById("updateDateModal").value;
+            var price = document.getElementById("updatePriceModal").value;
+
+            // Send request to backend server to update ticket
+            fetch(`/updateTicket/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    event: event,
+                    venue: venue,
+                    date: date,
+                    price: parseInt(price)
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Log response from server
+                    // Optionally, update UI based on response
+                    alert('Ticket updated successfully');
+                    closeUpdateModal(); // Close the modal after updating
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function toggleTickets() {
+            var ticketOutput = document.getElementById("ticketOutput");
+            var toggleTicketsBtn = document.getElementById("toggleTicketsBtn");
+
+            if (ticketOutput.classList.contains("hidden")) {
+                ticketOutput.classList.remove("hidden");
+                toggleTicketsBtn.textContent = "Hide All Tickets";
+            } else {
+                ticketOutput.classList.add("hidden");
+                toggleTicketsBtn.textContent = "See All Tickets";
+            }
+        }
+
+        function showUpdateForm() {
+            var updateTicketFormContainer = document.getElementById("updateTicketFormContainer");
+            updateTicketFormContainer.classList.remove("hidden");
+
+            // Optionally, populate the form fields with existing ticket data
+            // Example: populateUpdateFormFields(ticketData);
+        }
+
+        function updateTicket() {
+            var updateTicketFormContainer = document.getElementById("updateTicketFormContainer");
+            updateTicketFormContainer.classList.remove("hidden");
+
+            var id = document.getElementById("updateId").value;
+            var name = document.getElementById("updateName").value;
+            var event = document.getElementById("updateEvent").value;
+            var venue = document.getElementById("updateVenue").value;
+            var date = document.getElementById("updateDate").value;
+            var price = document.getElementById("updatePrice").value;
+
+            // Send request to backend server to update ticket
+            fetch(`/updateTicket/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    event: event,
+                    venue: venue,
+                    date: date,
+                    price: parseInt(price)
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Log response from server
+                    // Optionally, update UI based on response
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function deleteTicket() {
+            var id = document.getElementById("deleteId").value;
+
+            // Send request to backend server to delete ticket
+            fetch(`/deleteTicket/${id}`, {
+                method: 'DELETE'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Log response from server
+                    // Optionally, update UI based on response
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+
+        function addTicket() {
+            var id = document.getElementById("id").value;
+            var name = document.getElementById("name").value;
+            var event = document.getElementById("event").value;
+            var venue = document.getElementById("venue").value;
+            var date = document.getElementById("date").value;
+            var price = document.getElementById("price").value;
+
+            // Send request to backend server to add ticket
+            fetch('/addTicket', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: id,
+                    name: name,
+                    event: event,
+                    venue: venue,
+                    date: date,
+                    price: parseInt(price)
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Log response from server
+                    // Optionally, update UI based on response
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function getAllTickets() {
+            fetch('/allTickets')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Log response from server
+                    var ticketOutput = document.getElementById("ticketOutput");
+                    ticketOutput.innerHTML = ""; // Clear existing output
+
+                    // Create a card for each ticket item
+                    data.tickets.forEach((ticket, index) => {
+                        var card = document.createElement("div");
+                        card.className = "bg-gray-800 rounded-lg shadow-md p-4 mb-4";
+
+                        // Create paragraph elements for each ticket detail
+                        var idParagraph = document.createElement("p");
+                        idParagraph.textContent = `ID: ${ticket.id}`;
+
+                        var nameParagraph = document.createElement("p");
+                        nameParagraph.textContent = `Name: ${ticket.name}`;
+
+                        var eventParagraph = document.createElement("p");
+                        eventParagraph.textContent = `Event: ${ticket.event}`;
+
+                        var venueParagraph = document.createElement("p");
+                        venueParagraph.textContent = `Venue: ${ticket.venue}`;
+
+                        var dateParagraph = document.createElement("p");
+                        dateParagraph.textContent = `Date: ${ticket.date}`;
+
+                        var priceParagraph = document.createElement("p");
+                        priceParagraph.textContent = `Price: ${ticket.price}`;
+
+                        // Append detail paragraphs to the card
+                        card.appendChild(idParagraph);
+                        card.appendChild(nameParagraph);
+                        card.appendChild(eventParagraph);
+                        card.appendChild(venueParagraph);
+                        card.appendChild(dateParagraph);
+                        card.appendChild(priceParagraph);
+
+                        // Append card to ticket output
+                        ticketOutput.appendChild(card);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function getTicketById() {
+            var ticketId = document.getElementById("ticketId").value;
+            // Send request to backend server to get ticket by ID
+            fetch(`/ticket/${ticketId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ticket not found');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data); // Log response from server
+                    var searchResult = document.getElementById("searchResult");
+                    searchResult.innerHTML = ""; // Clear existing result
+
+                    var nameParagraph = document.createElement("p");
+                    nameParagraph.textContent = `Name: ${data.name}`;
+                    searchResult.appendChild(nameParagraph);
+
+                    var eventParagraph = document.createElement("p");
+                    eventParagraph.textContent = `Event: ${data.event}`;
+                    searchResult.appendChild(eventParagraph);
+
+                    var venueParagraph = document.createElement("p");
+                    venueParagraph.textContent = `Venue: ${data.venue}`;
+                    searchResult.appendChild(venueParagraph);
+
+                    var dateParagraph = document.createElement("p");
+                    dateParagraph.textContent = `Date: ${data.date}`;
+                    searchResult.appendChild(dateParagraph);
+
+                    var priceParagraph = document.createElement("p");
+                    priceParagraph.textContent = `Price: ${data.price}`;
+                    searchResult.appendChild(priceParagraph);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ticket not found');
+                });
+        }
+
+        // Automatically fetch all tickets when the page loads
+        getAllTickets();
+    </script>
+</body>
+
+</html>
