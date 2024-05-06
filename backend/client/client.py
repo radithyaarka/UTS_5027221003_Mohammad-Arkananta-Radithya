@@ -1,6 +1,6 @@
 import grpc
 import sys
-sys.path.append('../')  # Assuming the parent directory of 'backend' is two levels up
+sys.path.append('../')
 import tickets_pb2
 import tickets_pb2_grpc
 

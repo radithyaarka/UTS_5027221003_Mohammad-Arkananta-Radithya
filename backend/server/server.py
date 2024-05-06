@@ -1,6 +1,6 @@
 import grpc
 import sys
-sys.path.append('../')  # Assuming the parent directory of 'backend' is two levels up
+sys.path.append('../')
 import logging
 import pymongo
 from concurrent import futures
@@ -9,10 +9,10 @@ import tickets_pb2_grpc
 
 class TicketService(tickets_pb2_grpc.TicketServiceServicer):
     def __init__(self):
-        self.client = pymongo.MongoClient("mongodb://localhost:27017/")  # Connect to MongoDB
-        self.db = self.client["TicketBooking"]  # Specify the database name
-        self.collection = self.db["TicketList"]  # Specify the collection name
-        logging.info("Connected to MongoDB")  # Log when connected to MongoDB
+        self.client = pymongo.MongoClient("mongodb://localhost:27017/")
+        self.db = self.client["TicketBooking"]
+        self.collection = self.db["TicketList"]
+        logging.info("Connected to MongoDB")
 
     def AddTicket(self, request, context):
         logging.info("Received AddTicket request: %s", request)
@@ -23,9 +23,8 @@ class TicketService(tickets_pb2_grpc.TicketServiceServicer):
             "venue": request.venue,
             "date": request.date,
             "price": request.price
-            # Add other fields if needed
         }
-        self.collection.insert_one(ticket_data)  # Insert ticket data into MongoDB
+        self.collection.insert_one(ticket_data)
         return request
 
     def GetAllTickets(self, request, context):
@@ -39,7 +38,6 @@ class TicketService(tickets_pb2_grpc.TicketServiceServicer):
                 venue=ticket_data["venue"],
                 date=ticket_data["date"],
                 price=ticket_data["price"]
-                # Add other fields if needed
             )
             ticket_list.append(ticket)
         return tickets_pb2.TicketList(tickets=ticket_list)
@@ -55,7 +53,6 @@ class TicketService(tickets_pb2_grpc.TicketServiceServicer):
                 venue=ticket_data["venue"],
                 date=ticket_data["date"],
                 price=ticket_data["price"]
-                # Add other fields if needed
             )
             return ticket
         else:
@@ -67,7 +64,6 @@ class TicketService(tickets_pb2_grpc.TicketServiceServicer):
         logging.info("Received UpdateTicket request for ticket ID: %s", request.id)
         ticket_data = self.collection.find_one({"id": request.id})
         if ticket_data:
-            # Update ticket data in MongoDB
             updated_ticket_data = {
                 "id": request.id,
                 "name": request.name,
@@ -75,10 +71,9 @@ class TicketService(tickets_pb2_grpc.TicketServiceServicer):
                 "venue": request.venue,
                 "date": request.date,
                 "price": request.price
-                # Add other fields if needed
             }
             self.collection.update_one({"id": request.id}, {"$set": updated_ticket_data})
-            return tickets_pb2.Empty()  # Return an empty response
+            return tickets_pb2.Empty() 
         else:
             context.set_code(grpc.StatusCode.NOT_FOUND)
             context.set_details("Ticket not found")
@@ -88,13 +83,11 @@ class TicketService(tickets_pb2_grpc.TicketServiceServicer):
         logging.info("Received DeleteTicket request for ticket ID: %s", request.id)
         result = self.collection.delete_one({"id": request.id})
         if result.deleted_count > 0:
-            return tickets_pb2.Empty()  # Return an empty response
+            return tickets_pb2.Empty()
         else:
             context.set_code(grpc.StatusCode.NOT_FOUND)
             context.set_details("Ticket not found")
             return tickets_pb2.Empty()
-
-    # Implement other methods (UpdateTicket, DeleteTicket) similarly
 
 def serve():
     logging.basicConfig(level=logging.INFO)

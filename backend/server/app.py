@@ -1,20 +1,18 @@
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 import sys
-sys.path.append('../')  # Assuming the parent directory of 'backend' is two levels up
+sys.path.append('../')
 import grpc
 import tickets_pb2
 import tickets_pb2_grpc
 import os
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
-# gRPC client setup
-grpc_channel = grpc.insecure_channel('localhost:5000')  # Assuming gRPC server is running on localhost:5000
+grpc_channel = grpc.insecure_channel('localhost:5000')
 grpc_stub = tickets_pb2_grpc.TicketServiceStub(grpc_channel)
 
-# Set the template folder to ../../frontend/
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../frontend/src/'))
 app.template_folder = template_dir
 

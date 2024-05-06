@@ -153,7 +153,6 @@
     <script>
         function openUpdateModal() {
             var id = document.getElementById("updateId").value;
-            // Fetch existing ticket details based on ID and populate the modal fields
             fetch(`/ticket/${id}`)
                 .then(response => {
                     if (!response.ok) {
@@ -170,7 +169,6 @@
                     document.getElementById("updateDateModal").value = data.date;
                     document.getElementById("updatePriceModal").value = data.price;
 
-                    // Show the modal
                     document.getElementById("updateModal").classList.remove("hidden");
                 })
                 .catch(error => {
@@ -180,7 +178,6 @@
         }
 
         function closeUpdateModal() {
-            // Clear modal fields and hide the modal
             document.getElementById("updateModalForm").reset();
             document.getElementById("updateModal").classList.add("hidden");
         }
@@ -233,9 +230,6 @@
         function showUpdateForm() {
             var updateTicketFormContainer = document.getElementById("updateTicketFormContainer");
             updateTicketFormContainer.classList.remove("hidden");
-
-            // Optionally, populate the form fields with existing ticket data
-            // Example: populateUpdateFormFields(ticketData);
         }
 
         function updateTicket() {
@@ -295,7 +289,6 @@
             var date = document.getElementById("date").value;
             var price = document.getElementById("price").value;
 
-            // Send request to backend server to add ticket
             fetch('/addTicket', {
                 method: 'POST',
                 headers: {
